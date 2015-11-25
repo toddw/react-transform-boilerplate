@@ -1,39 +1,54 @@
 import React, { Component } from 'react';
-import { NICE, SUPER_NICE } from './colors';
+import { Link, Router, Route, IndexRoute } from "react-router";
+import createBrowserHistory from "history/lib/createBrowserHistory";
 
-class Counter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { counter: 0 };
-    this.interval = setInterval(() => this.tick(), 1000);
-  }
+export class Layout extends Component {
+    render() {
+        return (
+            <div>
+                <Link to="/">Home</Link> - <Link to="/test">Test</Link>
+                {this.props.children}
+            </div>
+        );
+    }
+}
 
-  tick() {
-    this.setState({
-      counter: this.state.counter + this.props.increment
-    });
-  }
+export class Home extends Component {
+    render() {
+        return (
+            <div>
+                Home
+            </div>
+        );
+    }
+}
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render() {
-    return (
-      <h1 style={{ color: this.props.color }}>
-        Counter ({this.props.increment}): {this.state.counter}
-      </h1>
-    );
-  }
+export class Test extends Component {
+    render() {
+        return (
+            <div>
+                Test
+            </div>
+        );
+    }
 }
 
 export class App extends Component {
-  render() {
-    return (
-      <div>
-        <Counter increment={1} color={NICE} />
-        <Counter increment={5} color={SUPER_NICE} />
-      </div>
-    );
-  }
+    static defaultProps = {
+        routerHistory: createBrowserHistory()
+    };
+
+    render() {
+        return (
+            <div>
+                <Router history={this.props.routerHistory}>
+                    <Route component={Layout} path="/">
+                        <IndexRoute component={Home} />
+                        <Route path="/test" component={Test} />
+                    </Route>
+                </Router>
+            </div>
+        );
+    }
 }
+
